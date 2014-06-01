@@ -74,7 +74,7 @@ class StegNote extends JPanel implements ActionListener{
         filePanel.add(save);
 
         //payload
-        payload = new JTextArea("Open a BMP file to begin.");
+        payload = new JTextArea("Open a BMP file to begin. This box will then become modifiable and contain either the hidden message or an empty space to enter a new one. Press save to confirm your changes.");
         payload.setAlignmentX(CENTER_ALIGNMENT);
         payload.setEditable(false);
         this.add(new JScrollPane(payload));
