@@ -32,7 +32,7 @@ class Steganography{
             int newByte;
             for(char element : payload.toCharArray()){
                 payloadByte = (int) element;
-                //System.out.println(element + ":" + Integer.toString(character));
+                //System.out.println(element + ":" + Integer.toString(character)); //uncomment for debug
                 for(int i = 0; i < 8; i++){
                     readByte = stream.read();
                     payloadBit = (payloadByte >> i) & 1;
@@ -66,7 +66,9 @@ class Steganography{
     }
     
     /*
-     * Takes a file and returns the hiden payload
+     * Takes a file and returns the hiden payload.
+     * First determines if there is a message encoded by checking for the 32 bytes worth of 0's in the LSB's.
+     * If there is a message it is decoded starting from the next byte using LSB steganography to determine each bit of each character until the sentinel value is reached. (a byte of 0's)
      */
     public static String decode(File carrier){
         int start = locatePixelArray(carrier);
