@@ -26,7 +26,7 @@ Run the following in the project directory.
 
 ### Windows
 
-Open the file 'compile.bat' in a text editor.
+Open the file 'compileAndPackage.bat' in a text editor.
 
 Locate the line:
 
@@ -37,4 +37,4 @@ This will be different for every computer, but here is an example:
 
     SET javaPath="\Program Files\Java\jdk1.7.0_51\bin"
 
-Now run the 'compile.bat' script.
+Now run the 'compileAndPackage.bat' script.
