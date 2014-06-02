@@ -30,9 +30,9 @@ Open the file 'compileAndPackage.bat' in a text editor.
 
 Locate the line:
 
-    SET javaPath="\put\jdk\path\here"
+    SET javaPath="\put\jdk\bin\path\here"
 
-And modify it to contain the path to your JDK bin directory.
+And modify it to contain the path to your JDK **bin** directory.
 This will be different for every computer, but here is an example:
 
     SET javaPath="\Program Files\Java\jdk1.7.0_51\bin"
