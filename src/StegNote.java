@@ -11,9 +11,11 @@ class StegNote extends JPanel implements ActionListener{
     private static JFileChooser fc;
     private static boolean debugLayout = false;
 
-    static private File carrier;
+    private static File carrier;
     private JLabel filePathLabel;
     private JLabel thumbnail;
+    private JLabel size;
+    private JLabel spaceRemaining;
     private JTextArea payload;
 
     /*
@@ -85,9 +87,9 @@ class StegNote extends JPanel implements ActionListener{
         this.add(tail);
 
         //settings
-        JPanel settings = new JPanel();
-        settings.setBorder(BorderFactory.createTitledBorder("Settings"));
-        tail.add(settings);
+        //JPanel settings = new JPanel();
+        //settings.setBorder(BorderFactory.createTitledBorder("Settings"));
+        //tail.add(settings);
 
         //file info
         JPanel fileInfo = new JPanel();
@@ -96,9 +98,9 @@ class StegNote extends JPanel implements ActionListener{
         tail.add(fileInfo);
 
         //file info labels
-        JLabel size = new JLabel("Size: x");
+        size = new JLabel("Size: x");
         fileInfo.add(size);
-        JLabel spaceRemaining = new JLabel("Data Remaining: x");
+        spaceRemaining = new JLabel("Data Remaining: x");
         fileInfo.add(spaceRemaining);
         JLabel encodingDensity = new JLabel("Encoding Density: x");
         fileInfo.add(encodingDensity);
@@ -113,7 +115,7 @@ class StegNote extends JPanel implements ActionListener{
             openPanel.setBorder(BorderFactory.createLineBorder(Color.black));
             this.setBorder(BorderFactory.createLineBorder(Color.black));
             tail.setBorder(BorderFactory.createLineBorder(Color.black));
-            settings.setBorder(BorderFactory.createLineBorder(Color.black));
+            //settings.setBorder(BorderFactory.createLineBorder(Color.black));
             filePanel.setBorder(BorderFactory.createLineBorder(Color.black));
         }
     }
@@ -172,8 +174,13 @@ class StegNote extends JPanel implements ActionListener{
                 }
                 thumbnail.setIcon(new ImageIcon(image.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 
+                float fileSize = carrier.length() / 1024; //get size of file in KB
+                size.setText(String.format("Size: %.2f KB", fileSize));
+                //spaceRemaining.setText("k");
+
                 payload.setText(Steganography.decode(carrier));
                 payload.setEditable(true);
+
             }
         }
         else if(e.getActionCommand().equals("save")){
