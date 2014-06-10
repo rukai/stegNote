@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.filechooser.*;
@@ -16,6 +17,7 @@ class StegNote extends JPanel implements ActionListener{
     private JLabel thumbnail;
     private JLabel size;
     private JLabel spaceRemaining;
+    private int spaceAvailable = 0;
     private JTextArea payload;
 
     /*
@@ -100,10 +102,23 @@ class StegNote extends JPanel implements ActionListener{
         //file info labels
         size = new JLabel("Size: x");
         fileInfo.add(size);
-        spaceRemaining = new JLabel("Data Remaining: x");
+        spaceRemaining = new JLabel("Characters Remaining: x");
+        payload.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void changedUpdate(DocumentEvent e){
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e){
+                spaceRemaining.setText(String.format("Characters Remaining: %d", spaceAvailable - payload.getText().length()));
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e){
+                spaceRemaining.setText(String.format("Characters Remaining: %d", spaceAvailable - payload.getText().length()));
+            }
+        });
         fileInfo.add(spaceRemaining);
-        JLabel encodingDensity = new JLabel("Encoding Density: x");
-        fileInfo.add(encodingDensity);
+        //JLabel encodingDensity = new JLabel("Encoding Density: x");
+        //fileInfo.add(encodingDensity);
 
         //thumbnail
         thumbnail = loadImage("preview.png");
@@ -173,17 +188,19 @@ class StegNote extends JPanel implements ActionListener{
                     } catch(IOException g){}
                 }
                 thumbnail.setIcon(new ImageIcon(image.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-
+                //update file size
                 float fileSize = carrier.length() / 1024; //get size of file in KB
                 size.setText(String.format("Size: %.2f KB", fileSize));
-                //spaceRemaining.setText("k");
-
+                
+                //decode payload
                 payload.setText(Steganography.decode(carrier));
+                spaceAvailable = Steganography.spaceAvailable(carrier);
                 payload.setEditable(true);
 
             }
         }
         else if(e.getActionCommand().equals("save")){
+            //encode payload into carrier
             Steganography.encode(carrier, payload.getText());
         }
         
