@@ -16,8 +16,8 @@ class StegNote extends JPanel implements ActionListener{
     private JLabel filePathLabel;
     private JLabel thumbnail;
     private JLabel size;
-    private JLabel spaceRemaining;
-    private int spaceAvailable = 0;
+    private JLabel charactersRemaining;
+    private int charactersAvailable = 0;
     private JTextArea payload;
 
     /*
@@ -102,21 +102,21 @@ class StegNote extends JPanel implements ActionListener{
         //file info labels
         size = new JLabel("Size: x");
         fileInfo.add(size);
-        spaceRemaining = new JLabel("Characters Remaining: x");
+        charactersRemaining = new JLabel("Characters Remaining: x");
         payload.getDocument().addDocumentListener(new DocumentListener(){
             @Override
             public void changedUpdate(DocumentEvent e){
             }
             @Override
             public void removeUpdate(DocumentEvent e){
-                spaceRemaining.setText(String.format("Characters Remaining: %d", spaceAvailable - payload.getText().length()));
+                updateCharactersRemaining();
             }
             @Override
             public void insertUpdate(DocumentEvent e){
-                spaceRemaining.setText(String.format("Characters Remaining: %d", spaceAvailable - payload.getText().length()));
+                updateCharactersRemaining();
             }
         });
-        fileInfo.add(spaceRemaining);
+        fileInfo.add(charactersRemaining);
         //JLabel encodingDensity = new JLabel("Encoding Density: x");
         //fileInfo.add(encodingDensity);
 
@@ -170,6 +170,12 @@ class StegNote extends JPanel implements ActionListener{
     }
     
     /*
+     * Update Characters remaining statistic
+     */
+    public void updateCharactersRemaining(){
+        charactersRemaining.setText(String.format("Characters Remaining: %d", charactersAvailable - payload.getText().length()));
+    }
+    /*
      * Respond to button press
      */
     public void actionPerformed(ActionEvent e){
@@ -194,9 +200,11 @@ class StegNote extends JPanel implements ActionListener{
                 
                 //decode payload
                 payload.setText(Steganography.decode(carrier));
-                spaceAvailable = Steganography.spaceAvailable(carrier);
                 payload.setEditable(true);
 
+                //update characters available/remaining statistics.
+                charactersAvailable = Steganography.charactersAvailable(carrier);
+                updateCharactersRemaining(); 
             }
         }
         else if(e.getActionCommand().equals("save")){

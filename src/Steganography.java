@@ -109,7 +109,7 @@ class Steganography{
     /**
      * Returns the space available for encoding steganographic messages in bytes.
      */
-    public static int spaceAvailable(File carrier){
+    public static int charactersAvailable(File carrier){
         return (int) (carrier.length() - locatePixelArray(carrier) + 32) / 8;
     }
 }
