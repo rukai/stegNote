@@ -1,6 +1,6 @@
 import javax.swing.*;
 import javax.swing.event.*;
-import java.awt.*;
+import java.awt.*; 
 import java.awt.event.*;
 import javax.swing.filechooser.*;
 import java.io.*;
@@ -78,7 +78,10 @@ class StegNote extends JPanel implements ActionListener{
         filePanel.add(save);
 
         //payload
-        payload = new JTextArea("Open a BMP file to begin. This box will then become modifiable and contain either a hidden message or an empty space to enter a new one. Press save to confirm your changes.");
+        payload = new JTextArea(
+                  "1.   Open a BMP file to begin.\n"
+                + "2.   This box will then become modifiable and contain either a hidden message or an empty space to enter a new one.\n"
+                + "3.   Press save to confirm your changes.");
         payload.setAlignmentX(CENTER_ALIGNMENT);
         payload.setEditable(false);
         this.add(new JScrollPane(payload));
