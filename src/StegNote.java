@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.*;
 import java.awt.*; 
 import java.awt.event.*;
 import javax.swing.filechooser.*;
@@ -17,7 +18,7 @@ class StegNote extends JPanel implements ActionListener{
     private JLabel thumbnail;
     private JLabel size;
     private JLabel charactersRemaining;
-    private int charactersAvailable = 0;
+    private int charactersAvailable = -1; //A value of -1 should be considered an infinite or unreachable value for all logic.
     private JTextArea payload;
 
     /*
@@ -82,6 +83,26 @@ class StegNote extends JPanel implements ActionListener{
                   "1.   Open a BMP file to begin.\n"
                 + "2.   This box will then become modifiable and contain either a hidden message or an empty space to enter a new one.\n"
                 + "3.   Press save to confirm your changes.");
+
+        //prevent going over character limit
+        ((AbstractDocument) payload.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+            throws BadLocationException{
+                if(fb.getDocument().getLength() + string.length() <= charactersAvailable || charactersAvailable == -1){
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attr)
+            throws BadLocationException{
+                if(fb.getDocument().getLength() - length + string.length() <= charactersAvailable || charactersAvailable == -1){
+                    super.replace(fb, offset, length, string, attr);
+                }
+            }
+        });
+        
         payload.setAlignmentX(CENTER_ALIGNMENT);
         payload.setEditable(false);
         this.add(new JScrollPane(payload));
@@ -200,7 +221,16 @@ class StegNote extends JPanel implements ActionListener{
                 //update file size
                 float fileSize = carrier.length() / 1024; //get size of file in KB
                 size.setText(String.format("Size: %.2f KB", fileSize));
-                
+
+                //empty payload textbox
+                try{
+                    payload.getDocument().remove(0, payload.getDocument().getLength());
+                }
+                catch(BadLocationException f){
+                    System.out.println("This is impossible and cannot occur, if it does please divide by zero.");
+                    return;
+                }
+
                 //decode payload
                 payload.setText(Steganography.decode(carrier));
                 payload.setEditable(true);
